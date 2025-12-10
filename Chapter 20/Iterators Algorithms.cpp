@@ -1,30 +1,32 @@
-// Program: MyArgs
+#include <algorithm>
+#include <array>
 #include <iostream>
-#include <sstream> // for std::stringstream
-#include <string>
+#include <string_view>
 
-int main(int argc, char* argv[])
+struct Season
 {
-	if (argc <= 1)
-	{
-		// On some operating systems, argv[0] can end up as an empty string instead of the program's name.
-		// We'll conditionalize our response on whether argv[0] is empty or not.
-		if (argv[0])
-			std::cout << "Usage: " << argv[0] << " <number>" << '\n';
-		else
-			std::cout << "Usage: <program name> <number>" << '\n';
+    std::string_view name{};
+    double averageTemperature{};
+};
 
-		return 1;
-	}
+int main()
+{
+    std::array<Season, 4> seasons{
+      { { "Spring", 285.0 },
+        { "Summer", 296.0 },
+        { "Fall", 288.0 },
+        { "Winter", 263.0 } }
+    };
 
-	std::stringstream convert{ argv[2] }; // set up a stringstream variable named convert, initialized with the input from argv[1]
+    std::sort(seasons.begin(), seasons.end(), [](Season& a, Season& b) {
+        return a.averageTemperature < b.averageTemperature;
+        }
+    );
 
-	int myint{};
-	if (!(convert >> myint)) // do the conversion
-		myint = 0; // if conversion fails, set myint to a default value
+    for (const auto& season : seasons)
+    {
+        std::cout << season.name << '\n';
+    }
 
-	std::cout << "Got integer: " << myint << '\n';
-	std::cout << "Got integer: " << argv[0] << '\n';
-
-	return 0;
+    return 0;
 }
