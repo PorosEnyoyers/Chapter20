@@ -1,62 +1,30 @@
+// Program: MyArgs
 #include <iostream>
-#include <vector>
-#include <ranges>
-//fibonacci one
-int main()
+#include <sstream> // for std::stringstream
+#include <string>
+
+int main(int argc, char* argv[])
 {
-	std::size_t fibNum{ 0 };
-	std::vector<int> results{ 0,1 };
-
-	for (int x{ 2 }; x < 13; ++x)
+	if (argc <= 1)
 	{
-		fibNum = results[(x - 1)] + results[(x - 2)];
-		results.push_back(fibNum);
+		// On some operating systems, argv[0] can end up as an empty string instead of the program's name.
+		// We'll conditionalize our response on whether argv[0] is empty or not.
+		if (argv[0])
+			std::cout << "Usage: " << argv[0] << " <number>" << '\n';
+		else
+			std::cout << "Usage: <program name> <number>" << '\n';
+
+		return 1;
 	}
 
-	for (const auto& a : results)
-		std::cout << a << ' ';
-	return 0;
-}
-//binary convert one
-int main()
-{
-	int x{ -15 };
-	unsigned int y{ static_cast<unsigned int>(x) };
-	std::vector<bool> result{};
-	while (y > 1)
-	{
-		result.push_back(y % 2);
-		y /= 2;
-	}
+	std::stringstream convert{ argv[2] }; // set up a stringstream variable named convert, initialized with the input from argv[1]
 
-	for (auto x : std::ranges::reverse_view(result))
-	{
-		std::cout << x;
-	}
+	int myint{};
+	if (!(convert >> myint)) // do the conversion
+		myint = 0; // if conversion fails, set myint to a default value
+
+	std::cout << "Got integer: " << myint << '\n';
+	std::cout << "Got integer: " << argv[0] << '\n';
 
 	return 0;
-}
-//add all nums one
-int main()
-{
-	int x{ 93427 };
-	int result{ 0 };
-	while (x > 0)
-	{
-		result += (x % 10);
-		x /= 10;
-	}
-
-	std::cout << result;
-}
-//factorial one
-int main()
-{
-	int x{ 5 };
-	int result{ 1 };
-	for (int i{ 1 }; i < x + 1; ++i)
-	{
-		result *= i;
-	}
-	std::cout << result;
 }
