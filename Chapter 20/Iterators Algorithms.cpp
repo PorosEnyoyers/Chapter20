@@ -1,32 +1,23 @@
-#include <algorithm>
-#include <array>
 #include <iostream>
-#include <string_view>
+#include <functional>
 
-struct Season
+void myInvoke(auto& fn)
 {
-    std::string_view name{};
-    double averageTemperature{};
-};
+    fn();
+}
 
 int main()
 {
-    std::array<Season, 4> seasons{
-      { { "Spring", 285.0 },
-        { "Summer", 296.0 },
-        { "Fall", 288.0 },
-        { "Winter", 263.0 } }
-    };
+    int i{ 0 };
 
-    std::sort(seasons.begin(), seasons.end(), [](Season& a, Season& b) {
-        return a.averageTemperature < b.averageTemperature;
-        }
-    );
+    // Increments and prints its local copy of @i.
+    auto count{ [i]() mutable {
+      std::cout << ++i << '\n';
+    } };
 
-    for (const auto& season : seasons)
-    {
-        std::cout << season.name << '\n';
-    }
+    myInvoke(count);
+    myInvoke(count);
+    myInvoke(count);
 
     return 0;
 }
